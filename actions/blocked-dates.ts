@@ -1,11 +1,8 @@
 "use server";
 
 import { blockDate, unblockDate } from "@/lib/db/blocked-dates";
-
 import { auth } from "@/lib/auth";
-
 import { redirect } from "next/navigation";
-
 import { revalidatePath } from "next/cache";
 
 export async function blockDateAction(formData: FormData) {
@@ -15,15 +12,18 @@ export async function blockDateAction(formData: FormData) {
     redirect("/");
   }
 
-  const booking_date = String(formData.get("booking_date"));
+  const booking_date = String(formData.get("booking_date")).trim();
+  const reason = String(formData.get("reason") || "").trim();
 
-  const reason = String(formData.get("reason"));
+  if (!booking_date) {
+    throw new Error("Date is required");
+  }
 
   await blockDate(booking_date, reason);
 
-  revalidatePath("/admin");
-
+  revalidatePath("/");
   revalidatePath("/bookings");
+  revalidatePath("/bookings/create");
 }
 
 export async function unblockDateAction(formData: FormData) {
@@ -33,11 +33,15 @@ export async function unblockDateAction(formData: FormData) {
     redirect("/");
   }
 
-  const booking_date = String(formData.get("booking_date"));
+  const booking_date = String(formData.get("booking_date")).trim();
+
+  if (!booking_date) {
+    throw new Error("Date is required");
+  }
 
   await unblockDate(booking_date);
 
-  revalidatePath("/admin");
-
+  revalidatePath("/");
   revalidatePath("/bookings");
+  revalidatePath("/bookings/create");
 }

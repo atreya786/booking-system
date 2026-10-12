@@ -1,6 +1,7 @@
 {
-  "name": "appointment",
-  "version": "0.1.0",
+  "name": "venueflow",
+  "version": "1.0.0",
+  "description": "VenueFlow — Venue Booking & Full-Day Priority Allocation Platform",
   "private": true,
   "type": "module",
   "scripts": {
